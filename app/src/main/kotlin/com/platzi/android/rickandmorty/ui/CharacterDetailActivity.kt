@@ -16,6 +16,7 @@ import com.platzi.android.rickandmorty.database.CharacterDatabase
 import com.platzi.android.rickandmorty.databinding.ActivityCharacterDetailBinding
 import com.platzi.android.rickandmorty.presentation.CharacterDetailViewModel
 import com.platzi.android.rickandmorty.presentation.Event
+import com.platzi.android.rickandmorty.usecases.GetEpisodesFromCharacter
 import com.platzi.android.rickandmorty.utils.Constants
 import com.platzi.android.rickandmorty.utils.bindCircularImageUrl
 import com.platzi.android.rickandmorty.utils.getViewModel
@@ -35,10 +36,14 @@ class CharacterDetailActivity: AppCompatActivity() {
         CharacterDatabase.getDatabase(application).characterDao()
     }
 
+    private val getEpisodesFromCharacter: GetEpisodesFromCharacter by lazy {
+        GetEpisodesFromCharacter(episodeRequest)
+    }
+
     private val characterDetailViewModel: CharacterDetailViewModel by lazy {
         getViewModel {
             CharacterDetailViewModel(intent.getParcelableExtra(Constants.EXTRA_CHARACTER),
-                characterDao, episodeRequest)
+                characterDao, getEpisodesFromCharacter)
         }
     }
 

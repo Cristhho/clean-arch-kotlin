@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import com.platzi.android.rickandmorty.api.*
 import com.platzi.android.rickandmorty.database.CharacterDao
 import com.platzi.android.rickandmorty.database.CharacterEntity
+import com.platzi.android.rickandmorty.usecases.GetEpisodesFromCharacter
 import io.reactivex.Maybe
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -15,7 +15,7 @@ import io.reactivex.schedulers.Schedulers
 class CharacterDetailViewModel(
     private val character: CharacterServer? = null,
     private val characterDao: CharacterDao,
-    private val episodeRequest: EpisodeRequest): ViewModel() {
+    private val getEpisodesFromCharacter: GetEpisodesFromCharacter): ViewModel() {
 
     private val disposable = CompositeDisposable()
 
@@ -80,17 +80,7 @@ class CharacterDetailViewModel(
 
     private fun requestShowEpisodeList(episodeUrlList: List<String>){
         disposable.add(
-            Observable.fromIterable(episodeUrlList)
-                .flatMap { episode: String ->
-                    episodeRequest.baseUrl = episode
-                    episodeRequest
-                        .getService<EpisodeService>()
-                        .getEpisode()
-                        .toObservable()
-                }
-                .toList()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
+            getEpisodesFromCharacter.invoke(episodeUrlList)
                 .doOnSubscribe {
                     _events.value = Event(CharacterDetailNavigation.ShowEpisodeListLoading)
                 }

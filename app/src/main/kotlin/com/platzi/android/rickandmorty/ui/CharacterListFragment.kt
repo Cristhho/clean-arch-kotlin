@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.platzi.android.rickandmorty.R
@@ -16,11 +15,9 @@ import com.platzi.android.rickandmorty.api.*
 import com.platzi.android.rickandmorty.api.APIConstants.BASE_API_URL
 import com.platzi.android.rickandmorty.databinding.FragmentCharacterListBinding
 import com.platzi.android.rickandmorty.presentation.CharacterListViewModel
+import com.platzi.android.rickandmorty.usecases.GetAllCharacters
 import com.platzi.android.rickandmorty.utils.setItemDecorationSpacing
 import com.platzi.android.rickandmorty.utils.showLongToast
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_character_list.*
 
 
@@ -31,8 +28,12 @@ class CharacterListFragment : Fragment() {
     private lateinit var listener: OnCharacterListFragmentListener
     private lateinit var characterRequest: CharacterRequest
 
+    private val getAllCharacters: GetAllCharacters by lazy {
+        GetAllCharacters(characterRequest)
+    }
+
     private val characterListViewModel: CharacterListViewModel by lazy {
-        CharacterListViewModel(characterRequest)
+        CharacterListViewModel(getAllCharacters)
     }
 
     private val onScrollListener: RecyclerView.OnScrollListener by lazy {
@@ -100,7 +101,7 @@ class CharacterListFragment : Fragment() {
             characterListViewModel.onRetryGetAllCharacter(rvCharacterList.adapter?.itemCount ?: 0)
         }
 
-        characterListViewModel.events.observe(this, Observer { events ->
+        characterListViewModel.events.observe(this, { events ->
             events?.getContentIfNotHandled()?.let { navigation ->
                 when (navigation) {
                     is CharacterListViewModel.CharacterListNavigation.ShowCharacterError -> {
