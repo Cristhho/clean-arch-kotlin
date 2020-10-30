@@ -1,7 +1,10 @@
 package com.platzi.android.rickandmorty.api
 
 import com.platzi.android.rickandmorty.data.RemoteCharacterDataSource
+import com.platzi.android.rickandmorty.data.RemoteEpisodesDataSource
 import com.platzi.android.rickandmorty.domain.Character
+import com.platzi.android.rickandmorty.domain.Episode
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -12,6 +15,23 @@ class CharacterRetrofitDataSource(private val characterRequest: CharacterRequest
             .getService<CharacterService>()
             .getAllCharacters(page)
             .map(CharacterResponseServer::toCharacterDomain)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+    }
+}
+
+class EpisodeRetrofitDataSource(private val episodeRequest: EpisodeRequest): RemoteEpisodesDataSource {
+    override fun getEpisodesFromCharacter(episodeUrlList: List<String>): Single<List<Episode>> {
+        return Observable.fromIterable(episodeUrlList)
+            .flatMap { episode: String ->
+                episodeRequest.baseUrl = episode
+                episodeRequest
+                    .getService<EpisodeService>()
+                    .getEpisode()
+                    .map(EpisodeServer::toEpisodeDomain)
+                    .toObservable()
+            }
+            .toList()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
     }

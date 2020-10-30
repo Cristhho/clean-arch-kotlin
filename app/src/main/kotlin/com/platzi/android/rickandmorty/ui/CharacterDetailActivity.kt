@@ -12,9 +12,8 @@ import com.platzi.android.rickandmorty.api.APIConstants.BASE_API_URL
 import com.platzi.android.rickandmorty.api.CharacterRequest
 import com.platzi.android.rickandmorty.api.CharacterRetrofitDataSource
 import com.platzi.android.rickandmorty.api.EpisodeRequest
-import com.platzi.android.rickandmorty.data.CharacterRepository
-import com.platzi.android.rickandmorty.data.LocalCharacterDataSource
-import com.platzi.android.rickandmorty.data.RemoteCharacterDataSource
+import com.platzi.android.rickandmorty.api.EpisodeRetrofitDataSource
+import com.platzi.android.rickandmorty.data.*
 import com.platzi.android.rickandmorty.database.CharacterDatabase
 import com.platzi.android.rickandmorty.database.CharacterRoomDataSource
 import com.platzi.android.rickandmorty.databinding.ActivityCharacterDetailBinding
@@ -42,8 +41,14 @@ class CharacterDetailActivity: AppCompatActivity() {
         EpisodeRequest(BASE_API_URL)
     }
 
+    private val remoteEpisodesDataSource: RemoteEpisodesDataSource by lazy {
+        EpisodeRetrofitDataSource(episodeRequest)
+    }
+    private val episodeRepository: EpisodeRepository by lazy {
+        EpisodeRepository(remoteEpisodesDataSource)
+    }
     private val getEpisodesFromCharacter: GetEpisodesFromCharacter by lazy {
-        GetEpisodesFromCharacter(episodeRequest)
+        GetEpisodesFromCharacter(episodeRepository)
     }
 
     private val characterRequest: CharacterRequest by lazy { CharacterRequest(BASE_API_URL) }
