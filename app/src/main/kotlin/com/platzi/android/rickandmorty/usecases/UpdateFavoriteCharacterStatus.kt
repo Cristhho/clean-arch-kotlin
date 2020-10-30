@@ -1,13 +1,15 @@
 package com.platzi.android.rickandmorty.usecases
 
 import com.platzi.android.rickandmorty.database.CharacterDao
-import com.platzi.android.rickandmorty.database.CharacterEntity
+import com.platzi.android.rickandmorty.database.toCharacterEntity
+import com.platzi.android.rickandmorty.domain.Character
 import io.reactivex.Maybe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 class UpdateFavoriteCharacterStatus(private val characterDao: CharacterDao) {
-    fun invoke(characterEntity: CharacterEntity): Maybe<Boolean> {
+    fun invoke(character: Character): Maybe<Boolean> {
+        val characterEntity = character.toCharacterEntity()
         return characterDao.getCharacterById(characterEntity.id)
             .isEmpty
             .flatMapMaybe { isEmpty ->

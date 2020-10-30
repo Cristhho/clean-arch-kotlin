@@ -4,22 +4,22 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.platzi.android.rickandmorty.api.*
-import com.platzi.android.rickandmorty.database.CharacterEntity
+import com.platzi.android.rickandmorty.domain.Character
 import com.platzi.android.rickandmorty.usecases.GetEpisodesFromCharacter
 import com.platzi.android.rickandmorty.usecases.GetFavoriteCharacterStatus
 import com.platzi.android.rickandmorty.usecases.UpdateFavoriteCharacterStatus
 import io.reactivex.disposables.CompositeDisposable
 
 class CharacterDetailViewModel(
-    private val character: CharacterServer? = null,
+    private val character: Character? = null,
     private val getFavoriteCharacterStatus: GetFavoriteCharacterStatus,
     private val updateFavoriteCharacterStatus: UpdateFavoriteCharacterStatus,
     private val getEpisodesFromCharacter: GetEpisodesFromCharacter): ViewModel() {
 
     private val disposable = CompositeDisposable()
 
-    private val _characterValues = MutableLiveData<CharacterServer>()
-    val characterValues: LiveData<CharacterServer> get() = _characterValues
+    private val _characterValues = MutableLiveData<Character>()
+    val characterValues: LiveData<Character> get() = _characterValues
     private val _isFavorite = MutableLiveData<Boolean>()
     val isFavorite: LiveData<Boolean> get() = _isFavorite
     private val _events = MutableLiveData<Event<CharacterDetailNavigation>>()
@@ -42,9 +42,8 @@ class CharacterDetailViewModel(
     }
 
     fun onUpdateFavoriteCharacterStatus() {
-        val characterEntity: CharacterEntity = character!!.toCharacterEntity()
         disposable.add(
-            updateFavoriteCharacterStatus.invoke(characterEntity)
+            updateFavoriteCharacterStatus.invoke(character!!)
                 .subscribe { isFavorite ->
                     _isFavorite.value = isFavorite
                 }

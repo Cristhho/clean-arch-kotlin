@@ -14,6 +14,7 @@ import com.platzi.android.rickandmorty.adapters.CharacterGridAdapter
 import com.platzi.android.rickandmorty.api.*
 import com.platzi.android.rickandmorty.api.APIConstants.BASE_API_URL
 import com.platzi.android.rickandmorty.databinding.FragmentCharacterListBinding
+import com.platzi.android.rickandmorty.domain.Character
 import com.platzi.android.rickandmorty.presentation.CharacterListViewModel
 import com.platzi.android.rickandmorty.usecases.GetAllCharacters
 import com.platzi.android.rickandmorty.utils.setItemDecorationSpacing
@@ -128,7 +129,7 @@ class CharacterListFragment : Fragment() {
     //region Inner Classes & Interfaces
 
     interface OnCharacterListFragmentListener {
-        fun openCharacterDetail(character: CharacterServer)
+        fun openCharacterDetail(character: Character)
     }
 
     //endregion

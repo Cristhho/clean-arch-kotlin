@@ -9,11 +9,13 @@ import androidx.lifecycle.Observer
 import com.platzi.android.rickandmorty.R
 import com.platzi.android.rickandmorty.adapters.EpisodeListAdapter
 import com.platzi.android.rickandmorty.api.APIConstants.BASE_API_URL
-import com.platzi.android.rickandmorty.api.CharacterServer
 import com.platzi.android.rickandmorty.api.EpisodeRequest
 import com.platzi.android.rickandmorty.database.CharacterDao
 import com.platzi.android.rickandmorty.database.CharacterDatabase
 import com.platzi.android.rickandmorty.databinding.ActivityCharacterDetailBinding
+import com.platzi.android.rickandmorty.domain.Character
+import com.platzi.android.rickandmorty.parcelable.CharacterParcelable
+import com.platzi.android.rickandmorty.parcelable.toCharacterDomain
 import com.platzi.android.rickandmorty.presentation.CharacterDetailViewModel
 import com.platzi.android.rickandmorty.presentation.Event
 import com.platzi.android.rickandmorty.usecases.GetEpisodesFromCharacter
@@ -52,7 +54,7 @@ class CharacterDetailActivity: AppCompatActivity() {
 
     private val characterDetailViewModel: CharacterDetailViewModel by lazy {
         getViewModel {
-            CharacterDetailViewModel(intent.getParcelableExtra(Constants.EXTRA_CHARACTER),
+            CharacterDetailViewModel(intent.getParcelableExtra<CharacterParcelable>(Constants.EXTRA_CHARACTER)?.toCharacterDomain(),
                 getFavoriteCharacterStatus, updateFavoriteCharacterStatus, getEpisodesFromCharacter)
         }
     }
@@ -93,7 +95,7 @@ class CharacterDetailActivity: AppCompatActivity() {
 
     //region Private Methods
 
-    private fun loadCharacter(character: CharacterServer) {
+    private fun loadCharacter(character: Character) {
         binding.characterImage.bindCircularImageUrl(
             url = character.image,
             placeholder = R.drawable.ic_camera_alt_black,
@@ -101,7 +103,7 @@ class CharacterDetailActivity: AppCompatActivity() {
         )
         binding.characterDataName = character.name
         binding.characterDataStatus = character.status
-        binding.characterDataSpecies = character.species
+        binding.characterDataSpecies = character.specie
         binding.characterDataGender = character.gender
         binding.characterDataOriginName = character.origin.name
         binding.characterDataLocationName = character.location.name

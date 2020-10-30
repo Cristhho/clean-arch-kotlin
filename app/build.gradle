@@ -44,6 +44,8 @@ androidExtensions {
 }
 
 dependencies {
+    implementation project(":domain")
+
     //Kotlin
     implementation kotlinLib
 
