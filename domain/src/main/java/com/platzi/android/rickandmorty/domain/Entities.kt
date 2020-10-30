@@ -21,3 +21,8 @@ data class Character(
     val location: Location,
     val episodeList: List<String>
 )
+
+data class Episode (
+    val id: Int,
+    val name: String
+)
