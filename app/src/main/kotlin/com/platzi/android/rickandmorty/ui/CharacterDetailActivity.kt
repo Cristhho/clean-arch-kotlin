@@ -9,9 +9,14 @@ import androidx.lifecycle.Observer
 import com.platzi.android.rickandmorty.R
 import com.platzi.android.rickandmorty.adapters.EpisodeListAdapter
 import com.platzi.android.rickandmorty.api.APIConstants.BASE_API_URL
+import com.platzi.android.rickandmorty.api.CharacterRequest
+import com.platzi.android.rickandmorty.api.CharacterRetrofitDataSource
 import com.platzi.android.rickandmorty.api.EpisodeRequest
-import com.platzi.android.rickandmorty.database.CharacterDao
+import com.platzi.android.rickandmorty.data.CharacterRepository
+import com.platzi.android.rickandmorty.data.LocalCharacterDataSource
+import com.platzi.android.rickandmorty.data.RemoteCharacterDataSource
 import com.platzi.android.rickandmorty.database.CharacterDatabase
+import com.platzi.android.rickandmorty.database.CharacterRoomDataSource
 import com.platzi.android.rickandmorty.databinding.ActivityCharacterDetailBinding
 import com.platzi.android.rickandmorty.domain.Character
 import com.platzi.android.rickandmorty.parcelable.CharacterParcelable
@@ -36,20 +41,27 @@ class CharacterDetailActivity: AppCompatActivity() {
     private val episodeRequest: EpisodeRequest by lazy {
         EpisodeRequest(BASE_API_URL)
     }
-    private val characterDao: CharacterDao by lazy {
-        CharacterDatabase.getDatabase(application).characterDao()
-    }
 
     private val getEpisodesFromCharacter: GetEpisodesFromCharacter by lazy {
         GetEpisodesFromCharacter(episodeRequest)
     }
 
+    private val characterRequest: CharacterRequest by lazy { CharacterRequest(BASE_API_URL) }
+    private val remoteCharacterDataSource: RemoteCharacterDataSource by lazy {
+        CharacterRetrofitDataSource(characterRequest)
+    }
+    private val localCharacterDataSource: LocalCharacterDataSource by lazy {
+        CharacterRoomDataSource(CharacterDatabase.getDatabase(applicationContext))
+    }
+    private val characterRepository: CharacterRepository by lazy {
+        CharacterRepository(remoteCharacterDataSource, localCharacterDataSource)
+    }
     private val getFavoriteCharacterStatus: GetFavoriteCharacterStatus by lazy {
-        GetFavoriteCharacterStatus(characterDao)
+        GetFavoriteCharacterStatus(characterRepository)
     }
 
     private val updateFavoriteCharacterStatus: UpdateFavoriteCharacterStatus by lazy {
-        UpdateFavoriteCharacterStatus(characterDao)
+        UpdateFavoriteCharacterStatus(characterRepository)
     }
 
     private val characterDetailViewModel: CharacterDetailViewModel by lazy {
