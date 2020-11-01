@@ -26,7 +26,7 @@ import com.platzi.android.rickandmorty.usecases.GetEpisodesFromCharacter
 import com.platzi.android.rickandmorty.usecases.GetFavoriteCharacterStatus
 import com.platzi.android.rickandmorty.usecases.UpdateFavoriteCharacterStatus
 import com.platzi.android.rickandmorty.utils.Constants
-import com.platzi.android.rickandmorty.utils.bindCircularImageUrl
+import com.platzi.android.rickandmorty.imagemanager.bindCircularImageUrl
 import com.platzi.android.rickandmorty.utils.getViewModel
 import com.platzi.android.rickandmorty.utils.showLongToast
 import kotlinx.android.synthetic.main.activity_character_detail.*
