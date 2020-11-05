@@ -11,8 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.platzi.android.rickandmorty.R
 import com.platzi.android.rickandmorty.adapters.CharacterGridAdapter
-import com.platzi.android.rickandmorty.api.*
-import com.platzi.android.rickandmorty.api.APIConstants.BASE_API_URL
+import com.platzi.android.rickandmorty.requestmanager.APIConstants.BASE_API_URL
 import com.platzi.android.rickandmorty.data.CharacterRepository
 import com.platzi.android.rickandmorty.data.LocalCharacterDataSource
 import com.platzi.android.rickandmorty.data.RemoteCharacterDataSource
@@ -21,6 +20,8 @@ import com.platzi.android.rickandmorty.databasemanager.CharacterRoomDataSource
 import com.platzi.android.rickandmorty.databinding.FragmentCharacterListBinding
 import com.platzi.android.rickandmorty.domain.Character
 import com.platzi.android.rickandmorty.presentation.CharacterListViewModel
+import com.platzi.android.rickandmorty.requestmanager.CharacterRequest
+import com.platzi.android.rickandmorty.requestmanager.CharacterRetrofitDataSource
 import com.platzi.android.rickandmorty.usecases.GetAllCharacters
 import com.platzi.android.rickandmorty.utils.setItemDecorationSpacing
 import com.platzi.android.rickandmorty.utils.showLongToast

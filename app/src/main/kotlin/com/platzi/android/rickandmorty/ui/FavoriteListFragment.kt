@@ -11,9 +11,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.platzi.android.rickandmorty.R
 import com.platzi.android.rickandmorty.adapters.FavoriteListAdapter
-import com.platzi.android.rickandmorty.api.APIConstants.BASE_API_URL
-import com.platzi.android.rickandmorty.api.CharacterRequest
-import com.platzi.android.rickandmorty.api.CharacterRetrofitDataSource
+import com.platzi.android.rickandmorty.requestmanager.APIConstants.BASE_API_URL
+import com.platzi.android.rickandmorty.requestmanager.CharacterRequest
+import com.platzi.android.rickandmorty.requestmanager.CharacterRetrofitDataSource
 import com.platzi.android.rickandmorty.data.CharacterRepository
 import com.platzi.android.rickandmorty.data.LocalCharacterDataSource
 import com.platzi.android.rickandmorty.data.RemoteCharacterDataSource
@@ -31,7 +31,7 @@ class FavoriteListFragment : Fragment() {
     private lateinit var favoriteListAdapter: FavoriteListAdapter
     private lateinit var listener: OnFavoriteListFragmentListener
 
-    private val characterRequest: CharacterRequest by lazy {CharacterRequest(BASE_API_URL)}
+    private val characterRequest: CharacterRequest by lazy { CharacterRequest(BASE_API_URL) }
     private val remoteCharacterDataSource: RemoteCharacterDataSource by lazy {
         CharacterRetrofitDataSource(characterRequest)
     }
