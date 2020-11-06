@@ -42,4 +42,9 @@ dependencies {
 
     implementation daggerLib
     kapt daggerCompiler
+
+    testImplementation coreTestingLib
+    testImplementation jUnitLib
+    testImplementation mockitoLib
+    testImplementation mockitoInlineLib
 }

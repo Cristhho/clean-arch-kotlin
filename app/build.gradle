@@ -75,4 +75,10 @@ dependencies {
     implementation recyclerViewLib
     implementation swipeRefreshLayoutLib
     implementation viewPagerLib
+
+    //testing
+    testImplementation coreTestingLib
+    testImplementation jUnitLib
+    testImplementation mockitoLib
+    testImplementation mockitoInlineLib
 }
