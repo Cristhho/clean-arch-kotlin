@@ -12,17 +12,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.platzi.android.rickandmorty.R
 import com.platzi.android.rickandmorty.adapters.CharacterGridAdapter
 import com.platzi.android.rickandmorty.requestmanager.APIConstants.BASE_API_URL
-import com.platzi.android.rickandmorty.data.CharacterRepository
-import com.platzi.android.rickandmorty.data.LocalCharacterDataSource
-import com.platzi.android.rickandmorty.data.RemoteCharacterDataSource
-import com.platzi.android.rickandmorty.databasemanager.CharacterDatabase
-import com.platzi.android.rickandmorty.databasemanager.CharacterRoomDataSource
 import com.platzi.android.rickandmorty.databinding.FragmentCharacterListBinding
+import com.platzi.android.rickandmorty.di.CharacterListComponent
+import com.platzi.android.rickandmorty.di.CharacterListModule
 import com.platzi.android.rickandmorty.domain.Character
 import com.platzi.android.rickandmorty.presentation.CharacterListViewModel
 import com.platzi.android.rickandmorty.requestmanager.CharacterRequest
-import com.platzi.android.rickandmorty.requestmanager.CharacterRetrofitDataSource
-import com.platzi.android.rickandmorty.usecases.GetAllCharacters
+import com.platzi.android.rickandmorty.utils.app
 import com.platzi.android.rickandmorty.utils.setItemDecorationSpacing
 import com.platzi.android.rickandmorty.utils.showLongToast
 import kotlinx.android.synthetic.main.fragment_character_list.*
@@ -34,22 +30,10 @@ class CharacterListFragment : Fragment() {
     private lateinit var listener: OnCharacterListFragmentListener
     private lateinit var characterRequest: CharacterRequest
 
-    private val remoteCharacterDataSource: RemoteCharacterDataSource by lazy {
-        CharacterRetrofitDataSource(characterRequest)
-    }
-    private val localCharacterDataSource: LocalCharacterDataSource by lazy {
-        CharacterRoomDataSource(CharacterDatabase.getDatabase(activity!!.applicationContext))
-    }
-    private val characterRepository: CharacterRepository by lazy {
-        CharacterRepository(remoteCharacterDataSource, localCharacterDataSource)
-    }
-
-    private val getAllCharacters: GetAllCharacters by lazy {
-        GetAllCharacters(characterRepository)
-    }
+    private lateinit var characterListComponent: CharacterListComponent
 
     private val characterListViewModel: CharacterListViewModel by lazy {
-        CharacterListViewModel(getAllCharacters)
+        characterListComponent.characterListViewModel
     }
 
     private val onScrollListener: RecyclerView.OnScrollListener by lazy {
@@ -70,6 +54,11 @@ class CharacterListFragment : Fragment() {
     //endregion
 
     //region Override Methods & Callbacks
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        characterListComponent = context!!.app.component.inject(CharacterListModule())
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

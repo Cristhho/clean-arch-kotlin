@@ -47,4 +47,7 @@ dependencies {
 
     implementation rxAndroidLib
     implementation rxJavaLib
+
+    implementation daggerLib
+    kapt daggerCompiler
 }

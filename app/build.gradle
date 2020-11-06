@@ -61,6 +61,9 @@ dependencies {
 
     implementation reactiveStreamsLib
 
+    implementation daggerLib
+    kapt daggerCompiler
+
     //RxJava
     implementation rxAndroidLib
     implementation rxJavaLib
